@@ -45,9 +45,11 @@ class MLModel:
 
         for x1, y1, x2, y2, score, _ in detections:
 
-            print(f"Detection: {x1}-{x2}, {y1}-{y2}, {score}")
+             if score == 0:
+                break
+            print(f"Detection: x: {x1}-{x2}, y: {y1}-{y2}, confidence: {score}")
             # TODO we don't want to consider detections with confidence (score) below CONF_THRESHOLD (a value you should set in config.py)
-            if score < CONF_THRESHOLD:
+            if score < 0.5*CONF_THRESHOLD:
                 continue
 
             u = (x1+x2)
@@ -59,7 +61,9 @@ class MLModel:
 
             if distance < STOP_DISTANCE:
                 stop = True
+                time.sleep(10)
                 break
+
 
             # TODO we want to stop if there is a duckie closer than STOP_DISTANCE away
             # To calculate if the duckie is too close we need to convert the pixel coordinates to 
