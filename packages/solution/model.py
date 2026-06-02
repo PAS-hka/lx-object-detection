@@ -47,17 +47,21 @@ class MLModel:
 
              if score == 0:
                 break
-            print(f"Detection: x: {x1}-{x2}, y: {y1}-{y2}, confidence: {score}")
+            
             # TODO we don't want to consider detections with confidence (score) below CONF_THRESHOLD (a value you should set in config.py)
-            if score < 0.5*CONF_THRESHOLD:
+            if score < CONF_THRESHOLD:
+                print(f"Detection: x: {x1}-{x2}, y: {y1}-{y2}, confidence: {score}")
                 continue
 
-            u = (x1+x2)
+            width = (x2-x1)
+            height = y2-y1
+            u = (x1+x2)/2
             v = y2
             pix = Pixel(x=u, y=v)
             vec = self.ground_projector.camera.pixel2vector(pix)
             ground_point = self.ground_projector.vector2ground(vec)
             distance = np.sqrt(ground_point.x**2+ground_point.y**2)
+            print("vec:" + vec + " ground_point:" + ground_point + " distance:" + distance)
 
             if distance < STOP_DISTANCE:
                 stop = True
